@@ -141,7 +141,7 @@ linkedin-post-generator/
 
 | Constant | Used at runtime? | Description |
 |---|---|---|
-| `LINKEDIN_STYLE_SPEC` | **Yes** | ~540-token blended ruleset: Hormozi body rhythm, Shaan Puri hook rules, Fireship density + banned words |
+| `LINKEDIN_STYLE_SPEC` | **Yes** | Blended ruleset focusing on rhythm, hook structure, density, and banned words |
 | `LINKEDIN_STYLE_CHECKLIST` | No — docs only | 11 human-readable rule labels |
 | `LINKEDIN_REGEX_CHECKLIST` | No — docs only | 8 regex-oriented rule labels |
 | `LINKEDIN_SEMANTIC_CHECKLIST` | No — docs only | 5 semantic rule labels |
@@ -156,7 +156,7 @@ Schema hint is always last (recency bias — closest to generation).
 | Agent | `LINKEDIN_STYLE_SPEC` injected? | Notes |
 |---|---|---|
 | HookFinder | No | Hook/angle rules are hard-coded in `HOOK_FINDER_PROMPT`; consistent with the spec |
-| BodyWriter | **Yes** (`body_writer.py:BODY_WRITER_PROMPT`) | Enforces Hormozi rhythm, anti-wall-of-text |
+| BodyWriter | **Yes** (`body_writer.py:BODY_WRITER_PROMPT`) | Enforces engaging rhythm, anti-wall-of-text |
 | CTAWriter | **Yes** (`cta_writer.py:CTA_WRITER_PROMPT`) | Enforces single-CTA and hashtag rules |
 | Editor | **Yes** (`editor.py:EDITOR_PROMPT`) | Preserves voice while fixing QA violations |
 | Approver | n/a — no LLM | Pure Python |
