@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     # ── API Keys ─────────────────────────────────────────────
     gemini_api_key: str | None = None
     serp_api_key: str | None = None
+    nvidia_api_key: str | None = None
 
     # ── Auth & Payments ──────────────────────────────────────
     jwt_secret: str = "super-secret-jwt-key-replace-in-production"

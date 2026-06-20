@@ -3,12 +3,13 @@ const PROVIDER_GROUPS = [
     label: 'Cloud API',
     options: [
       { value: 'google/gemini-3.5-flash', label: 'Google – Gemini 3.5 Flash' },
+      { value: 'nvidia/z-ai/glm-5.1', label: 'NVIDIA – GLM 5.1' },
     ],
   },
   {
     label: 'Ollama Cloud',
     options: [
-      { value: 'ollama/nemotron-3-ultra:cloud', label: 'Nemotron Ultra (NVIDIA)' },
+      { value: 'ollama/gemma4:31b-cloud', label: 'Ollama – Gemma4 31B' },
     ],
   },
 ]

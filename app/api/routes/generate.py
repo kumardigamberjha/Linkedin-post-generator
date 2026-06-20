@@ -96,12 +96,12 @@ async def ws_generate(websocket: WebSocket):
         if tier in ["free", "basic"]:
             p_lower = provider.lower()
             if not (
-                "google" in p_lower or "gemini" in p_lower or "nemotron" in p_lower
+                "google" in p_lower or "gemini" in p_lower or "nvidia" in p_lower or "ollama" in p_lower or "gemma" in p_lower
             ):
                 await websocket.send_json(
                     {
                         "type": "error",
-                        "message": f"The {tier.title()} plan only supports Gemini 3.5 Flash and Nemotron Ultra models. Upgrade to use other models.",
+                        "message": f"The {tier.title()} plan only supports standard Cloud and Local models. Upgrade to use premium models.",
                     }
                 )
                 return

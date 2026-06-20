@@ -35,5 +35,18 @@ def build_llm(provider: str, settings: Settings) -> Any:
         logger.info("Building LLM  ▸ provider=google  model=%s", model)
         return LLM(model=f"gemini/{model}", api_key=settings.gemini_api_key)
 
+    if provider == "nvidia" or provider.startswith("nvidia/"):
+        if not settings.nvidia_api_key:
+            logger.warning("Missing nvidia_api_key, falling back to ollama.")
+            return _ollama()
+
+        model = provider.split("/", 1)[1] if "/" in provider else "z-ai/glm-5.1"
+        logger.info("Building LLM  ▸ provider=nvidia  model=%s", model)
+        return LLM(
+            model=f"openai/{model}",
+            api_key=settings.nvidia_api_key,
+            base_url="https://integrate.api.nvidia.com/v1"
+        )
+
     logger.warning("Unknown provider '%s', falling back to ollama.", provider)
     return _ollama()
