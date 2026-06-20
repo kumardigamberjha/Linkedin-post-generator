@@ -195,13 +195,13 @@ Schema hint is always last (recency bias — closest to generation).
 
 | `provider` value | Model | Requires |
 |---|---|---|
-| `ollama` *(default)* | `qwen2.5-coder:latest` via `OLLAMA_API_BASE` | Local Ollama |
+| `ollama` *(default)* | `gemma4:31b-cloud` via `OLLAMA_API_BASE` | Local Ollama |
 | `ollama/<model>` | Any model name served by Ollama | Local Ollama |
 | `groq` | `groq/llama-3.3-70b-versatile` | `GROQ_API_KEY` |
 | `openai` | `gpt-4o` | `OPENAI_API_KEY` |
 | `anthropic` | `anthropic/claude-3-5-sonnet-latest` | `ANTHROPIC_API_KEY` |
-| `google` | `gemini/gemini-2.0-flash` | `GEMINI_API_KEY` |
-| `nvidia` | `nvidia/stepfun-ai/step-3.5-flash` | `NVIDIA_API_KEY` |
+| `google` | `gemini/gemini-3.5-flash` | `GEMINI_API_KEY` |
+| `nvidia` | `openai/z-ai/glm-5.1` | `NVIDIA_API_KEY` |
 
 Any provider that fails to initialise (missing key, network error) silently falls back to Ollama.
 
@@ -224,7 +224,7 @@ cp .env.example .env
 # Edit .env: set DEFAULT_PROVIDER and whichever API keys you need
 
 # 3. (Ollama only) pull the default model
-ollama pull qwen2.5-coder:latest
+ollama pull gemma4:31b-cloud
 
 # 4. Start API server
 uvicorn app.main:app --reload --port 8000
