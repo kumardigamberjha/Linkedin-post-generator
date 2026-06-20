@@ -38,49 +38,29 @@ Revoke each key, generate a replacement, and paste the new values into your loca
 ```
 Browser (React 19 + Vite)
         │
-        │  WebSocket  ws://localhost:8000/api/ws/generate   (streaming)
-        │  HTTP POST  /api/generate                         (sync)
+        │  WebSocket  ws://localhost:8000/api/ws/generate
+        │  HTTP POST  /api/generate
         ▼
 FastAPI  ·  app/main.py
         │
         ▼
 LinkedInPipelineOrchestrator  ·  app/pipeline/orchestrator.py
         │
-        ├─ 1 ─▶  HookFinderAgent          temp=0.8   max_tokens=1024
-        │         Analyzes topic → 3 hook candidates → picks strongest
-        │         Output: AnglePack  (topic, angle_type, hook_options[3],
-        │                             selected_hook, cta_type)
-        │         ↓  selected_hook is LOCKED here — never rewritten downstream
+        ├─ 1 ─▶  HookFinderAgent
         │
-        ├─ 2 ─▶  BodyWriterAgent           temp=0.7   max_tokens=2048
-        │         Writes body only (status quo → teardown → framework → ROI)
-        │         Hook passed as read-only context. No CTA, no hashtags.
-        │         Output: BodyDraft  (body: str)
+        ├─ 2 ─▶  BodyWriterAgent
         │
-        ├─ 3 ─▶  CTAWriterAgent            temp=0.7   max_tokens=512
-        │         Writes closing CTA + 3–5 hashtags only
-        │         Hook + body passed as read-only context.
-        │         Output: CTADraft  (cta: str, hashtags: list[str])
+        ├─ 3 ─▶  CTAWriterAgent
         │
-        ├─ 4 ─▶  assemble_post()           pure Python — NO LLM
-        │         Concatenates hook + body + cta + #hashtags with \n\n
-        │         Output: full_post string
+        ├─ 4 ─▶  assemble_post()
         │
-        ├─ 5 ─▶  Edit loop  (max 2 cycles, skipped when QA passes)
-        │         ├─ LinkedInQAChecker.check()  ← deterministic Python only
-        │         │    9 checks: word count (200–280), char count (≤3,000),
-        │         │              hashtag count (3–5), line length (≤12 words),
-        │         │              banned opener, banned words, CTA count,
-        │         │              wall-of-text, packed-sentence
-        │         └─ LinkedInEditorAgent    temp=0.3   max_tokens=4096
-        │              Rewrites to fix each failed QA rule.
-        │              LINKEDIN_STYLE_SPEC + failed-rule list both injected.
+        ├─ 5 ─▶  Edit loop
+        │         ├─ LinkedInQAChecker.check()
+        │         └─ LinkedInEditorAgent
         │
-        ├─ 6 ─▶  LinkedInQAChecker.check()    final measurement pass
+        ├─ 6 ─▶  LinkedInQAChecker.check()
         │
-        └─ 7 ─▶  LinkedInApproverAgent         pure Python — NO LLM
-                  Maps QA pass/fail keys → ApprovalResult
-                  Output: ApprovalResult  (approved, reasons, checklist)
+        └─ 7 ─▶  LinkedInApproverAgent
 ```
 
 LLM `.call()` runs inside `asyncio.to_thread` — the event loop never blocks.
@@ -94,44 +74,44 @@ No task queue; everything runs synchronously inside the FastAPI worker.
 linkedin-post-generator/
 │
 ├── app/
-│   ├── main.py              FastAPI app, CORS, lifespan
+│   ├── main.py
 │   ├── api/
-│   │   └── routes/          API endpoints (auth, generate, history, linkedin, payments, trends)
+│   │   └── routes/
 │   ├── core/
-│   │   └── config.py        Pydantic Settings — reads .env, singleton via get_settings()
+│   │   └── config.py
 │   ├── db/
-│   │   └── database.py      SQLite DB connection, schema, and CRUD functions
-│   ├── helpers/             Business-specific helper modules
+│   │   └── database.py
+│   ├── helpers/
 │   ├── services/
-│   │   ├── llm.py           build_llm() — maps provider string → crewai.LLM with fallback
-│   │   └── linkedin_client.py LinkedIn OAuth + Posts API — get_auth_url, exchange_code, etc.
+│   │   ├── llm.py
+│   │   └── linkedin_client.py
 │   ├── utils/
-│   │   └── pipeline_utils.py make_llm() · call_llm_with_retry() · extract_json()
+│   │   └── pipeline_utils.py
 │   └── pipeline/
-│       ├── orchestrator.py  LinkedInPipelineOrchestrator — drives all 7 phases
-│       ├── hook_finder.py   Phase 1 · HookFinderAgent → AnglePack
-│       ├── body_writer.py   Phase 2 · BodyWriterAgent → BodyDraft
-│       ├── cta_writer.py    Phase 3 · CTAWriterAgent → CTADraft
-│       ├── post_writer.py   Phase 4 · assemble_post() — no LLM
-│       ├── editor.py        Phase 5 · LinkedInEditorAgent → EditedPost
-│       ├── qa_checker.py    Phases 5+6 · LinkedInQAChecker — 9 Python checks
-│       ├── approver.py      Phase 7 · LinkedInApproverAgent — pure Python
-│       ├── schemas.py       Pydantic contracts for every inter-agent payload
-│       └── style_spec.py    LINKEDIN_STYLE_SPEC constant (injected into agents 2, 3, 4)
+│       ├── orchestrator.py
+│       ├── hook_finder.py
+│       ├── body_writer.py
+│       ├── cta_writer.py
+│       ├── post_writer.py
+│       ├── editor.py
+│       ├── qa_checker.py
+│       ├── approver.py
+│       ├── schemas.py
+│       └── style_spec.py
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx                 WebSocket client + state machine (idle/connecting/running/done/error)
+│   │   ├── App.jsx
 │   │   ├── components/
-│   │   │   ├── GenerateForm.jsx    Topic, niche, provider inputs
-│   │   │   ├── PipelineProgress.jsx  5-step live progress bar + step log
-│   │   │   └── PostResult.jsx      Final post + metadata badges + copy button · Post to LinkedIn button
-│   │   └── main.jsx                React 19 entry point
+│   │   │   ├── GenerateForm.jsx
+│   │   │   ├── PipelineProgress.jsx
+│   │   │   └── PostResult.jsx
+│   │   └── main.jsx
 │   ├── index.html
-│   └── package.json                React 19.2 · Vite 8
+│   └── package.json
 │
-├── .env.example             Env template — placeholder values only, no real keys
-├── .env                     Local secrets — git-ignored, never commit
+├── .env.example
+├── .env
 ├── .gitignore
 └── requirements.txt
 ```
