@@ -95,12 +95,18 @@ linkedin-post-generator/
 │
 ├── app/
 │   ├── main.py              FastAPI app, CORS, lifespan
-│   ├── config.py            Pydantic Settings — reads .env, singleton via get_settings()
-│   ├── llm.py               build_llm() — maps provider string → crewai.LLM with fallback
-│   ├── linkedin_client.py   LinkedIn OAuth + Posts API — get_auth_url, exchange_code, get_userinfo, post_content
-│   ├── routers/
-│   │   ├── generate.py      GET /health · POST /generate · WS /ws/generate
-│   │   └── linkedin.py      GET /api/linkedin/auth · GET /callback · POST /api/linkedin/post
+│   ├── api/
+│   │   └── routes/          API endpoints (auth, generate, history, linkedin, payments, trends)
+│   ├── core/
+│   │   └── config.py        Pydantic Settings — reads .env, singleton via get_settings()
+│   ├── db/
+│   │   └── database.py      SQLite DB connection, schema, and CRUD functions
+│   ├── helpers/             Business-specific helper modules
+│   ├── services/
+│   │   ├── llm.py           build_llm() — maps provider string → crewai.LLM with fallback
+│   │   └── linkedin_client.py LinkedIn OAuth + Posts API — get_auth_url, exchange_code, etc.
+│   ├── utils/
+│   │   └── pipeline_utils.py make_llm() · call_llm_with_retry() · extract_json()
 │   └── pipeline/
 │       ├── orchestrator.py  LinkedInPipelineOrchestrator — drives all 7 phases
 │       ├── hook_finder.py   Phase 1 · HookFinderAgent → AnglePack
@@ -111,8 +117,7 @@ linkedin-post-generator/
 │       ├── qa_checker.py    Phases 5+6 · LinkedInQAChecker — 9 Python checks
 │       ├── approver.py      Phase 7 · LinkedInApproverAgent — pure Python
 │       ├── schemas.py       Pydantic contracts for every inter-agent payload
-│       ├── style_spec.py    LINKEDIN_STYLE_SPEC constant (injected into agents 2, 3, 4)
-│       └── utils.py         make_llm() · call_llm_with_retry() · extract_json()
+│       └── style_spec.py    LINKEDIN_STYLE_SPEC constant (injected into agents 2, 3, 4)
 │
 ├── frontend/
 │   ├── src/
