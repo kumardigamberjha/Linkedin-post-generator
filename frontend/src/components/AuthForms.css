@@ -1,0 +1,205 @@
+.auth-wrapper {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Dynamic glowing background orbs */
+.auth-wrapper::before,
+.auth-wrapper::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.6;
+  animation: floatOrb 10s ease-in-out infinite alternate;
+}
+
+.auth-wrapper::before {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--linkedin-blue) 0%, transparent 70%);
+  top: 10%;
+  left: 20%;
+}
+
+.auth-wrapper::after {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #8a2be2 0%, transparent 70%);
+  bottom: 0%;
+  right: 15%;
+  animation-delay: -5s;
+}
+
+[data-theme="light"] .auth-wrapper::before,
+[data-theme="light"] .auth-wrapper::after {
+  opacity: 0.2;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -50px) scale(1.1); }
+  100% { transform: translate(-40px, 30px) scale(0.9); }
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: var(--surface);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+[data-theme="dark"] .auth-card {
+  background: rgba(20, 20, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-card:hover {
+  transform: translateY(-4px);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, var(--text) 0%, var(--linkedin-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.03em;
+}
+
+.auth-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+[data-theme="dark"] .auth-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.auth-input:focus {
+  background: var(--surface);
+  border-color: var(--linkedin-blue);
+  box-shadow: 0 0 0 4px var(--linkedin-blue-light);
+}
+
+[data-theme="dark"] .auth-input:focus {
+  box-shadow: 0 0 0 4px rgba(79, 156, 249, 0.15);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--linkedin-blue) 0%, #004182 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(10, 102, 194, 0.4);
+}
+
+.auth-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-error {
+  font-size: 13px;
+  color: var(--error);
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.auth-footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.auth-toggle {
+  background: none;
+  border: none;
+  color: var(--linkedin-blue);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.2s ease;
+}
+
+.auth-toggle:hover {
+  text-decoration: underline;
+  color: var(--linkedin-blue-dark);
+}
